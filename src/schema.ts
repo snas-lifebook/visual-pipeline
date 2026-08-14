@@ -1,11 +1,10 @@
 // 재사용 시계열 GIS 데이터 계약 (SCHEMA.md 코드판).
-// 도메인 무관 — rome-753-218 외 데이터셋도 같은 타입으로 로드된다.
+// 균일 시간필터 모델: 모든 시간가변 피처가 valid_from/valid_to를 갖고 setFilter로 연도 필터된다.
 
 export type Source = 'book' | 'web' | 'book+web';
 export type Confidence = 'high' | 'medium' | 'low';
 
 export interface Actor { id: string; label: string; color: string; source: Source; confidence: Confidence; }
-export interface TerritorySnapshot { year: number; note?: string; source: Source; confidence: Confidence; control: Record<string, string[]>; }
 export interface HistEvent { year: number; label: string; source: Source; confidence: Confidence; }
 export interface Manifest {
   id: string; title: string; center: [number, number]; zoom: number;
@@ -18,24 +17,27 @@ export interface FeatureCollection { type: 'FeatureCollection'; features: Featur
 export interface Dataset {
   manifest: Manifest;
   actors: Actor[];
-  territory: TerritorySnapshot[];
   events: HistEvent[];
-  regions: FeatureCollection;
+  territory: FeatureCollection;   // 지역×통치구간 (dated) — _gen_territory.mjs 생성
   settlements: FeatureCollection;
 }
 
-/** 계단 함수: year 이하 가장 최근 스냅샷 (atlas latestTerritorySnapshot 승계). */
-export function latestSnapshot(snapshots: TerritorySnapshot[], year: number): TerritorySnapshot | null {
-  const c = snapshots.filter(s => s.year <= year).sort((a, b) => b.year - a.year);
-  return c[0] ?? null;
+// 열린 시간범위 sentinel (valid_from/valid_to 없으면 상시). _gen_territory.mjs OPEN_FUTURE와 일치.
+export const OPEN_PAST = -1000000;
+export const OPEN_FUTURE = 1000000;
+
+/** props가 해당 연도에 존재하나 (valid_from <= year < valid_to). 테스트·검증용 순수 헬퍼. */
+export function withinDate(props: Record<string, any>, year: number): boolean {
+  const from = props.valid_from ?? OPEN_PAST;
+  const to = props.valid_to ?? OPEN_FUTURE;
+  return from <= year && year < to;
 }
 
-/** regionId → 지배 actorId 매핑 (해당 시점). */
-export function ownership(snap: TerritorySnapshot | null): Record<string, string> {
-  const owner: Record<string, string> = {};
-  if (!snap) return owner;
-  for (const [actor, regions] of Object.entries(snap.control)) for (const r of regions) owner[r] = actor;
-  return owner;
+/** MapLibre setFilter용 날짜창 표현식. setData 재계산 대신 이걸로 연도 필터. */
+export function dateWindow(year: number): any[] {
+  return ['all',
+    ['<=', ['coalesce', ['get', 'valid_from'], OPEN_PAST], year],
+    ['>', ['coalesce', ['get', 'valid_to'], OPEN_FUTURE], year]];
 }
 
 const SOURCES = new Set(['book', 'web', 'book+web']);
@@ -49,26 +51,17 @@ function eachCoord(geom: any, fn: (c: number[]) => void) {
   if (geom?.coordinates) walk(geom.coordinates);
 }
 
-/** 데이터→렌더 계약 검증. errors[] 비어 있으면 통과. atlas _verify.py 승계 + 좌표순서 검사. */
+function checkCoords(geom: any, id: string, err: string[]) {
+  eachCoord(geom, ([lng, lat]) => {
+    if (lng < -180 || lng > 180) err.push(`${id}: 경도 범위밖 ${lng} (좌표 flip?)`);
+    if (lat < -90 || lat > 90) err.push(`${id}: 위도 범위밖 ${lat} (좌표 flip?)`);
+  });
+}
+
+/** 데이터→렌더 계약 검증. errors[] 비어 있으면 통과. */
 export function validateDataset(d: Dataset): string[] {
   const err: string[] = [];
   const actorIds = new Set(d.actors.map(a => a.id));
-  const regionIds = new Set<string>();
-
-  // regions: 폴리곤 + 좌표 순서([lng,lat]) — flip 실수 탐지
-  const seenR = new Set<string>();
-  for (const f of d.regions.features) {
-    const id = f.properties?.id;
-    if (!id) { err.push('regions: id 없는 피처'); continue; }
-    if (seenR.has(id)) err.push(`regions: id 중복 ${id}`);
-    seenR.add(id); regionIds.add(id);
-    if (!f.properties.name_ko) err.push(`regions ${id}: name_ko 없음`);
-    if (f.geometry?.type !== 'Polygon') err.push(`regions ${id}: Polygon 아님`);
-    eachCoord(f.geometry, ([lng, lat]) => {
-      if (lng < -180 || lng > 180) err.push(`regions ${id}: 경도 범위밖 ${lng} (좌표 flip?)`);
-      if (lat < -90 || lat > 90) err.push(`regions ${id}: 위도 범위밖 ${lat} (좌표 flip?)`);
-    });
-  }
 
   // actors
   const seenA = new Set<string>();
@@ -79,27 +72,42 @@ export function validateDataset(d: Dataset): string[] {
     if (!SOURCES.has(a.source)) err.push(`actors ${a.id}: source 불명 ${a.source}`);
   }
 
-  // territory 스냅샷: 오름차순 + 참조 유효
-  let prev = -Infinity;
-  for (const s of d.territory) {
-    if (s.year < prev) err.push(`territory: 스냅샷 연도 역순 ${s.year}`);
-    prev = s.year;
-    if (!SOURCES.has(s.source)) err.push(`territory ${s.year}: source 불명`);
-    if (!CONFS.has(s.confidence)) err.push(`territory ${s.year}: confidence 불명`);
-    for (const [actor, regions] of Object.entries(s.control)) {
-      if (!actorIds.has(actor)) err.push(`territory ${s.year}: 미정의 actor ${actor}`);
-      for (const r of regions) if (!regionIds.has(r)) err.push(`territory ${s.year}: 미정의 region ${r}`);
+  // territory: 지역×통치구간 날짜 피처
+  const seenT = new Set<string>();
+  const byRegion: Record<string, { from: number; to: number }[]> = {};
+  for (const f of d.territory.features) {
+    const p = f.properties;
+    const id = p?.id ?? '(id없음)';
+    if (seenT.has(id)) err.push(`territory: id 중복 ${id}`);
+    seenT.add(id);
+    if (!p.name_ko) err.push(`territory ${id}: name_ko 없음`);
+    if (f.geometry?.type !== 'Polygon') err.push(`territory ${id}: Polygon 아님`);
+    checkCoords(f.geometry, `territory ${id}`, err);
+    if (!actorIds.has(p.actor)) err.push(`territory ${id}: 미정의 actor ${p.actor}`);
+    if (!SOURCES.has(p.source)) err.push(`territory ${id}: source 불명`);
+    if (!CONFS.has(p.confidence)) err.push(`territory ${id}: confidence 불명`);
+    if (!(p.valid_from < p.valid_to)) err.push(`territory ${id}: valid_from < valid_to 아님`);
+    (byRegion[p.region] ??= []).push({ from: p.valid_from, to: p.valid_to });
+  }
+  // 같은 지역 구간이 겹치거나(중복 소유주) 사이에 공백(무주공산 순간)이 없어야 한다
+  for (const [region, ivs] of Object.entries(byRegion)) {
+    ivs.sort((a, b) => a.from - b.from);
+    for (let i = 1; i < ivs.length; i++) {
+      if (ivs[i].from < ivs[i - 1].to) err.push(`territory ${region}: 구간 겹침 (${ivs[i - 1].to} > ${ivs[i].from})`);
+      else if (ivs[i].from > ivs[i - 1].to) err.push(`territory ${region}: 구간 공백 (${ivs[i - 1].to}~${ivs[i].from})`);
     }
   }
 
-  // settlements: 포인트 좌표 + 출처 완결
+  // settlements: 포인트 + 출처 완결 + 시간범위 온전
   for (const f of d.settlements.features) {
-    const id = f.properties?.id ?? '(id없음)';
+    const p = f.properties;
+    const id = p?.id ?? '(id없음)';
     if (f.geometry?.type !== 'Point') err.push(`settlements ${id}: Point 아님`);
-    const [lng, lat] = f.geometry?.coordinates ?? [];
-    if (lng < -180 || lng > 180 || lat < -90 || lat > 90) err.push(`settlements ${id}: 좌표 범위밖 [${lng},${lat}]`);
-    if (!SOURCES.has(f.properties?.source)) err.push(`settlements ${id}: source 불명`);
-    if (!CONFS.has(f.properties?.confidence)) err.push(`settlements ${id}: confidence 불명`);
+    checkCoords(f.geometry, `settlements ${id}`, err);
+    if (!SOURCES.has(p?.source)) err.push(`settlements ${id}: source 불명`);
+    if (!CONFS.has(p?.confidence)) err.push(`settlements ${id}: confidence 불명`);
+    if (p?.valid_from != null && p?.valid_to != null && !(p.valid_from < p.valid_to))
+      err.push(`settlements ${id}: valid_from < valid_to 아님`);
   }
 
   // events

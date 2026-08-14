@@ -16,7 +16,9 @@ npm test           # vitest watch
 `public/datasets/<domain>/` 하나가 한 캠페인. `manifest.json` + `layers/*.geojson` + `entities/*.json`. 좌표는 **GeoJSON [lng,lat]**(Leaflet [lat,lon] 아님). 계약·타입은 `src/schema.ts`.
 
 - `rome-753-218` — 로마 건국~제2차 포에니(기원전 753~218). atlas 프로토타입 포팅.
-- 국경 폴리곤 재생성: `node public/datasets/rome-753-218/_gen_regions.mjs`
+- 데이터 재생성: `npm run gen` (regions.geojson + territory.geojson). `validate`/`build`가 자동 실행.
+
+**시간필터 모델**: 시간가변 피처는 `valid_from`/`valid_to`를 갖고, 연도 변경 시 `setFilter`로 필터한다(`setData` 재계산 아님). territory는 `_gen_territory.mjs`가 스냅샷 오너십(`entities/territory.json`) × 지오메트리(`regions.geojson`)를 조인해 "지역×통치구간" 날짜 피처로 생성.
 
 > **provisional**: 현재 국경은 러프 근사(confidence:low). 정확한 BC218 트레이싱은 Natural Earth(PD) 기반 후속 작업. GPL/ODbL 데이터셋(historical-basemaps·AWMC)은 재배포하지 않고 트레이싱 참조로만 쓴다.
 
