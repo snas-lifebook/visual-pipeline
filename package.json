@@ -10,7 +10,7 @@
     "validate": "npm run gen && vitest run",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "gen": "node public/datasets/rome-753-218/_gen_regions.mjs && node public/datasets/rome-753-218/_gen_territory.mjs"
+    "gen": "node public/datasets/rome-753-218/_gen_regions.mjs && node public/datasets/rome-753-218/_gen_territory.mjs && node public/datasets/rome-753-218/_gen_admin.mjs"
   },
   "devDependencies": {
     "typescript": "~6.0.2",

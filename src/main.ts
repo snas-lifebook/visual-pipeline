@@ -13,11 +13,11 @@ async function j(p: string) {
 }
 
 async function load(): Promise<Dataset> {
-  const [manifest, actorsW, eventsW, territory, settlements] = await Promise.all([
+  const [manifest, actorsW, eventsW, territory, admin_regions, settlements] = await Promise.all([
     j('manifest.json'), j('entities/actors.json'), j('entities/events.json'),
-    j('layers/territory.geojson'), j('layers/settlements.geojson'),
+    j('layers/territory.geojson'), j('layers/admin_regions.geojson'), j('layers/settlements.geojson'),
   ]);
-  return { manifest, actors: actorsW.actors, events: eventsW.events, territory, settlements };
+  return { manifest, actors: actorsW.actors, events: eventsW.events, territory, admin_regions, settlements };
 }
 
 const formatYear = (y: number) => (y < 0 ? `기원전 ${-y}년` : `서기 ${y === 0 ? 1 : y}년`);
@@ -43,6 +43,7 @@ async function main() {
   const timed: [string, any[] | null][] = [
     ['territory-fill', null],
     ['territory-outline', null],
+    ['admin-line', null],
     ['settle-major', ['<=', ['get', 'rank'], 1]],
     ['settle-minor', ['>=', ['get', 'rank'], 2]],
   ];
@@ -53,6 +54,11 @@ async function main() {
     map.addSource('territory', { type: 'geojson', data: d.territory as any });
     map.addLayer({ id: 'territory-fill', type: 'fill', source: 'territory', paint: { 'fill-color': fillColor, 'fill-opacity': 0.4 } });
     map.addLayer({ id: 'territory-outline', type: 'line', source: 'territory', paint: { 'line-color': '#5a4a32', 'line-width': 1 } });
+
+    // 학술 속주(admin_regions) — 통치권(territory)과 별개 레이어. 점선 경계로 구분.
+    map.addSource('admin_regions', { type: 'geojson', data: d.admin_regions as any });
+    map.addLayer({ id: 'admin-line', type: 'line', source: 'admin_regions',
+      paint: { 'line-color': '#4b3f8c', 'line-width': 2, 'line-dasharray': [3, 2] } });
 
     map.addSource('settlements', { type: 'geojson', data: d.settlements as any });
     // 줌별 노출(LOD) = 레이어 minzoom 네이티브. 시간필터(setFilter)와 병존.
@@ -68,6 +74,10 @@ async function main() {
       const p: any = e.features?.[0]?.properties ?? {};
       const actor = d.actors.find(a => a.id === p.actor);
       popup(p.name_ko, `${actor ? actor.label : '무주공산'} · 신뢰도 ${p.confidence}`, e.lngLat);
+    });
+    map.on('click', 'admin-line', e => {
+      const p: any = e.features?.[0]?.properties ?? {};
+      popup(p.name_ko, `속주 ${p.name_ancient ?? ''} · 설치 기원전 ${-p.valid_from}년`, e.lngLat);
     });
     for (const l of ['settle-major', 'settle-minor']) {
       map.on('click', l, e => {

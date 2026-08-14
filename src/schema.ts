@@ -18,7 +18,8 @@ export interface Dataset {
   manifest: Manifest;
   actors: Actor[];
   events: HistEvent[];
-  territory: FeatureCollection;   // 지역×통치구간 (dated) — _gen_territory.mjs 생성
+  territory: FeatureCollection;      // 지역×통치구간 (dated) — _gen_territory.mjs 생성
+  admin_regions: FeatureCollection;  // 학술 속주 경계 (dated) — _gen_admin.mjs 생성. territory와 별개
   settlements: FeatureCollection;
 }
 
@@ -96,6 +97,22 @@ export function validateDataset(d: Dataset): string[] {
       if (ivs[i].from < ivs[i - 1].to) err.push(`territory ${region}: 구간 겹침 (${ivs[i - 1].to} > ${ivs[i].from})`);
       else if (ivs[i].from > ivs[i - 1].to) err.push(`territory ${region}: 구간 공백 (${ivs[i - 1].to}~${ivs[i].from})`);
     }
+  }
+
+  // admin_regions: 학술 속주 (MultiPolygon, dated). territory와 별개 레이어.
+  const seenP = new Set<string>();
+  for (const f of d.admin_regions.features) {
+    const p = f.properties;
+    const id = p?.id ?? '(id없음)';
+    if (seenP.has(id)) err.push(`admin_regions: id 중복 ${id}`);
+    seenP.add(id);
+    if (!p.name_ko) err.push(`admin_regions ${id}: name_ko 없음`);
+    if (f.geometry?.type !== 'MultiPolygon' && f.geometry?.type !== 'Polygon') err.push(`admin_regions ${id}: (Multi)Polygon 아님`);
+    checkCoords(f.geometry, `admin_regions ${id}`, err);
+    if (!SOURCES.has(p?.source)) err.push(`admin_regions ${id}: source 불명`);
+    if (!CONFS.has(p?.confidence)) err.push(`admin_regions ${id}: confidence 불명`);
+    if (p?.valid_from == null) err.push(`admin_regions ${id}: valid_from 없음`);
+    if (p?.valid_to != null && !(p.valid_from < p.valid_to)) err.push(`admin_regions ${id}: valid_from < valid_to 아님`);
   }
 
   // settlements: 포인트 + 출처 완결 + 시간범위 온전

@@ -13,6 +13,7 @@ function loadDataset(): Dataset {
     actors: rd('entities/actors.json').actors,
     events: rd('entities/events.json').events,
     territory: rd('layers/territory.geojson'),
+    admin_regions: rd('layers/admin_regions.geojson'),
     settlements: rd('layers/settlements.geojson'),
   };
 }
@@ -51,5 +52,14 @@ describe('rome-753-218 데이터셋 계약 (시간필터 모델)', () => {
     const cn = d.settlements.features.find(f => f.properties.id === 'carthago_nova')!;
     expect(withinDate(cn.properties, -240)).toBe(false);
     expect(withinDate(cn.properties, -218)).toBe(true);
+  });
+
+  it('속주 ≠ 통치권: 시칠리아는 영토 BC241, 정식 속주 BC227', () => {
+    const sicilia = d.admin_regions.features.find(f => f.properties.id === 'sicilia')!;
+    // 영토는 -241부터 로마
+    expect(ownerOf(d, 'sicily_east', -241)).toBe('rome');
+    // 정식 속주는 -227부터 — -240엔 속주 아님, -218엔 속주
+    expect(withinDate(sicilia.properties, -240)).toBe(false);
+    expect(withinDate(sicilia.properties, -218)).toBe(true);
   });
 });

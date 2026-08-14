@@ -1,0 +1,164 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "sicilia",
+    "layer": "admin_regions",
+    "name_ko": "시칠리아",
+    "name_ancient": "Sicilia",
+    "valid_from": -227,
+    "source": "book+web",
+    "confidence": "medium",
+    "note": "시라쿠사(히에론 왕국)는 BC212까지 제외 — 개략화"
+   },
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        14.9,
+        38.3
+       ],
+       [
+        15.7,
+        38.2
+       ],
+       [
+        15.3,
+        37
+       ],
+       [
+        14.9,
+        36.7
+       ],
+       [
+        14.3,
+        37.2
+       ],
+       [
+        14.4,
+        37.9
+       ],
+       [
+        14.9,
+        38.3
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        12.4,
+        38.2
+       ],
+       [
+        13.9,
+        38
+       ],
+       [
+        14.3,
+        37
+       ],
+       [
+        12.4,
+        36.7
+       ],
+       [
+        11.9,
+        37.5
+       ],
+       [
+        12.4,
+        38.2
+       ]
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "sardinia_et_corsica",
+    "layer": "admin_regions",
+    "name_ko": "사르디니아·코르시카",
+    "name_ancient": "Sardinia et Corsica",
+    "valid_from": -227,
+    "source": "book+web",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        8.4,
+        41.3
+       ],
+       [
+        9.7,
+        41.2
+       ],
+       [
+        9.6,
+        39.2
+       ],
+       [
+        8.5,
+        38.9
+       ],
+       [
+        8.1,
+        39.9
+       ],
+       [
+        8.2,
+        40.9
+       ],
+       [
+        8.4,
+        41.3
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        9.4,
+        43.1
+       ],
+       [
+        9.6,
+        42.6
+       ],
+       [
+        9.3,
+        41.6
+       ],
+       [
+        8.7,
+        41.4
+       ],
+       [
+        8.5,
+        42.1
+       ],
+       [
+        9,
+        42.9
+       ],
+       [
+        9.4,
+        43.1
+       ]
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}
