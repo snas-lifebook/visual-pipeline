@@ -1,0 +1,12 @@
+{
+  "id": "rome-753-218",
+  "title": "로마 건국~제2차 포에니 전쟁 (기원전 753~218)",
+  "crs": "EPSG:4326",
+  "center": [12.5, 41.9],
+  "zoom": 5,
+  "time": { "from": -753, "to": -218, "unit": "year" },
+  "layers": ["regions", "settlements"],
+  "skins": ["oldmap"],
+  "source": "atlas 프로토타입 포팅 + 리서치 트랙 B",
+  "note": "provisional — 국경 폴리곤은 러프 근사(confidence:low). 정확 트레이싱은 후속"
+}

@@ -1,0 +1,11 @@
+{
+  "events": [
+    { "year": -753, "label": "로마 건국(전승)", "source": "book", "confidence": "low" },
+    { "year": -509, "label": "공화정 수립", "source": "book", "confidence": "medium" },
+    { "year": -390, "label": "갈리아의 로마 약탈", "source": "book", "confidence": "medium" },
+    { "year": -264, "label": "제1차 포에니 전쟁", "source": "book", "confidence": "high" },
+    { "year": -241, "label": "시칠리아 병합", "source": "book", "confidence": "high" },
+    { "year": -238, "label": "사르디니아·코르시카 강점", "source": "book+web", "confidence": "medium" },
+    { "year": -218, "label": "제2차 포에니 전쟁 / 한니발 원정", "source": "book", "confidence": "high" }
+  ]
+}

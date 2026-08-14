@@ -1,0 +1,40 @@
+{
+  "snapshots": [
+    {
+      "year": -264,
+      "note": "제1차 포에니 전쟁 발발 — 로마는 이탈리아 반도, 카르타고는 시칠리아·사르디니아·서지중해",
+      "source": "book+web", "confidence": "medium",
+      "control": {
+        "rome": ["latium", "etruria", "campania", "samnium", "apulia", "calabria", "magna_graecia"],
+        "carthage": ["africa_carthage", "sicily_west", "sicily_east", "sardinia", "corsica", "hispania_east"]
+      }
+    },
+    {
+      "year": -241,
+      "note": "제1차 포에니 종전 — 로마가 시칠리아 병합",
+      "source": "book+web", "confidence": "medium",
+      "control": {
+        "rome": ["latium", "etruria", "campania", "samnium", "apulia", "calabria", "magna_graecia", "sicily_east", "sicily_west"],
+        "carthage": ["africa_carthage", "sardinia", "corsica", "hispania_east"]
+      }
+    },
+    {
+      "year": -238,
+      "note": "로마가 사르디니아·코르시카 강점 — 카르타고는 이베리아로 팽창(바르카 가문)",
+      "source": "book+web", "confidence": "medium",
+      "control": {
+        "rome": ["latium", "etruria", "campania", "samnium", "apulia", "calabria", "magna_graecia", "sicily_east", "sicily_west", "sardinia", "corsica"],
+        "carthage": ["africa_carthage", "hispania_east"]
+      }
+    },
+    {
+      "year": -218,
+      "note": "제2차 포에니 전쟁 전야 — 로마가 갈리아 키살피나까지, 카르타고는 아프리카+바르카 이베리아",
+      "source": "book+web", "confidence": "medium",
+      "control": {
+        "rome": ["latium", "etruria", "campania", "samnium", "apulia", "calabria", "magna_graecia", "sicily_east", "sicily_west", "sardinia", "corsica", "cisalpine_gaul"],
+        "carthage": ["africa_carthage", "hispania_east"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "actors": [
+    { "id": "rome",     "label": "로마",     "color": "#8c2f2f", "source": "book",     "confidence": "high" },
+    { "id": "carthage", "label": "카르타고", "color": "#2f6b6b", "source": "book",     "confidence": "high" }
+  ]
+}

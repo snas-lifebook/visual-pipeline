@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "id": "roma", "layer": "settlements", "name_ko": "로마", "name_ancient": "Roma", "name_modern": "Roma", "rank": 1, "minzoom": 0, "source": "book", "confidence": "high" }, "geometry": { "type": "Point", "coordinates": [12.48, 41.89] } },
+    { "type": "Feature", "properties": { "id": "carthago", "layer": "settlements", "name_ko": "카르타고", "name_ancient": "Carthago", "name_modern": "Tunis", "rank": 1, "minzoom": 0, "source": "book", "confidence": "high" }, "geometry": { "type": "Point", "coordinates": [10.32, 36.86] } },
+    { "type": "Feature", "properties": { "id": "syracusae", "layer": "settlements", "name_ko": "시라쿠사", "name_ancient": "Syracusae", "name_modern": "Siracusa", "rank": 2, "minzoom": 5, "source": "book+web", "confidence": "high" }, "geometry": { "type": "Point", "coordinates": [15.29, 37.07] } },
+    { "type": "Feature", "properties": { "id": "carthago_nova", "layer": "settlements", "name_ko": "신카르타고", "name_ancient": "Carthago Nova", "name_modern": "Cartagena", "rank": 2, "minzoom": 5, "source": "web", "confidence": "medium" }, "geometry": { "type": "Point", "coordinates": [-0.98, 37.60] } },
+    { "type": "Feature", "properties": { "id": "saguntum", "layer": "settlements", "name_ko": "사군툼", "name_ancient": "Saguntum", "name_modern": "Sagunto", "rank": 2, "minzoom": 5, "source": "web", "confidence": "medium", "note": "카르타고 영역 내 로마 동맹 — 전쟁 도화선" }, "geometry": { "type": "Point", "coordinates": [-0.28, 39.68] } }
+  ]
+}
