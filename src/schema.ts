@@ -21,6 +21,7 @@ export interface Dataset {
   territory: FeatureCollection;      // 지역×통치구간 (dated) — _gen_territory.mjs 생성
   admin_regions: FeatureCollection;  // 학술 속주 경계 (dated) — _gen_admin.mjs 생성. territory와 별개
   settlements: FeatureCollection;
+  battles: FeatureCollection;        // 전투 지점 (dated Point) — _gen_battles.mjs 생성
 }
 
 // 열린 시간범위 sentinel (valid_from/valid_to 없으면 상시). _gen_territory.mjs OPEN_FUTURE와 일치.
@@ -82,7 +83,7 @@ export function validateDataset(d: Dataset): string[] {
     if (seenT.has(id)) err.push(`territory: id 중복 ${id}`);
     seenT.add(id);
     if (!p.name_ko) err.push(`territory ${id}: name_ko 없음`);
-    if (f.geometry?.type !== 'Polygon') err.push(`territory ${id}: Polygon 아님`);
+    if (f.geometry?.type !== 'Polygon' && f.geometry?.type !== 'MultiPolygon') err.push(`territory ${id}: (Multi)Polygon 아님`);
     checkCoords(f.geometry, `territory ${id}`, err);
     if (!actorIds.has(p.actor)) err.push(`territory ${id}: 미정의 actor ${p.actor}`);
     if (!SOURCES.has(p.source)) err.push(`territory ${id}: source 불명`);
@@ -125,6 +126,25 @@ export function validateDataset(d: Dataset): string[] {
     if (!CONFS.has(p?.confidence)) err.push(`settlements ${id}: confidence 불명`);
     if (p?.valid_from != null && p?.valid_to != null && !(p.valid_from < p.valid_to))
       err.push(`settlements ${id}: valid_from < valid_to 아님`);
+  }
+
+  // battles: 전투 지점 (dated Point). victor·belligerents는 정의된 actor여야.
+  const seenB = new Set<string>();
+  for (const f of d.battles.features) {
+    const p = f.properties;
+    const id = p?.id ?? '(id없음)';
+    if (seenB.has(id)) err.push(`battles: id 중복 ${id}`);
+    seenB.add(id);
+    if (!p.name_ko) err.push(`battles ${id}: name_ko 없음`);
+    if (f.geometry?.type !== 'Point') err.push(`battles ${id}: Point 아님`);
+    checkCoords(f.geometry, `battles ${id}`, err);
+    if (!actorIds.has(p.victor)) err.push(`battles ${id}: 미정의 victor ${p.victor}`);
+    for (const b of p.belligerents ?? []) if (!actorIds.has(b)) err.push(`battles ${id}: 미정의 belligerent ${b}`);
+    if (typeof p.strength_a !== 'number' || typeof p.strength_b !== 'number') err.push(`battles ${id}: 병력 숫자 아님`);
+    if (!SOURCES.has(p.source)) err.push(`battles ${id}: source 불명`);
+    if (!CONFS.has(p.confidence)) err.push(`battles ${id}: confidence 불명`);
+    if (!(p.valid_from < p.valid_to)) err.push(`battles ${id}: valid_from < valid_to 아님`);
+    if (p.year < d.manifest.time.from || p.year > d.manifest.time.to) err.push(`battles ${id}: 연도 ${p.year} 시간범위 밖`);
   }
 
   // events

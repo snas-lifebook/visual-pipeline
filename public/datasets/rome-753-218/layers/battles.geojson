@@ -1,0 +1,179 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "trebia",
+    "layer": "battles",
+    "name_ko": "트레비아 전투",
+    "year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "belligerents": [
+     "rome",
+     "carthage"
+    ],
+    "general_a": "셈프로니우스 롱구스",
+    "general_b": "한니발",
+    "victor": "carthage",
+    "strength_a": 40000,
+    "strength_b": 40000,
+    "source": "book",
+    "confidence": "high"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     9.7,
+     45
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "trasimene",
+    "layer": "battles",
+    "name_ko": "트라시메노 호수 전투",
+    "year": -217,
+    "valid_from": -217,
+    "valid_to": 1000000,
+    "belligerents": [
+     "rome",
+     "carthage"
+    ],
+    "general_a": "플라미니우스",
+    "general_b": "한니발",
+    "victor": "carthage",
+    "strength_a": 30000,
+    "strength_b": 50000,
+    "source": "book",
+    "confidence": "high"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     12.1,
+     43.2
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "cannae",
+    "layer": "battles",
+    "name_ko": "칸나이 전투",
+    "year": -216,
+    "valid_from": -216,
+    "valid_to": 1000000,
+    "belligerents": [
+     "rome",
+     "carthage"
+    ],
+    "general_a": "바로·파울루스",
+    "general_b": "한니발",
+    "victor": "carthage",
+    "strength_a": 80000,
+    "strength_b": 50000,
+    "source": "book",
+    "confidence": "high"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     16.13,
+     41.31
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "metaurus",
+    "layer": "battles",
+    "name_ko": "메타우루스 전투",
+    "year": -207,
+    "valid_from": -207,
+    "valid_to": 1000000,
+    "belligerents": [
+     "rome",
+     "carthage"
+    ],
+    "general_a": "리비우스·네로",
+    "general_b": "하스드루발 바르카",
+    "victor": "rome",
+    "strength_a": 40000,
+    "strength_b": 30000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     13,
+     43.7
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "ilipa",
+    "layer": "battles",
+    "name_ko": "일리파 전투",
+    "year": -206,
+    "valid_from": -206,
+    "valid_to": 1000000,
+    "belligerents": [
+     "rome",
+     "carthage"
+    ],
+    "general_a": "스키피오",
+    "general_b": "하스드루발 기스고",
+    "victor": "rome",
+    "strength_a": 48000,
+    "strength_b": 60000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -5.98,
+     37.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "zama",
+    "layer": "battles",
+    "name_ko": "자마 전투",
+    "year": -202,
+    "valid_from": -202,
+    "valid_to": 1000000,
+    "belligerents": [
+     "rome",
+     "carthage"
+    ],
+    "general_a": "스키피오",
+    "general_b": "한니발",
+    "victor": "rome",
+    "strength_a": 40000,
+    "strength_b": 50000,
+    "source": "book",
+    "confidence": "low"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     9,
+     36.3
+    ]
+   }
+  }
+ ]
+}

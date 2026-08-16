@@ -13,11 +13,12 @@ async function j(p: string) {
 }
 
 async function load(): Promise<Dataset> {
-  const [manifest, actorsW, eventsW, territory, admin_regions, settlements] = await Promise.all([
+  const [manifest, actorsW, eventsW, territory, admin_regions, settlements, battles] = await Promise.all([
     j('manifest.json'), j('entities/actors.json'), j('entities/events.json'),
     j('layers/territory.geojson'), j('layers/admin_regions.geojson'), j('layers/settlements.geojson'),
+    j('layers/battles.geojson'),
   ]);
-  return { manifest, actors: actorsW.actors, events: eventsW.events, territory, admin_regions, settlements };
+  return { manifest, actors: actorsW.actors, events: eventsW.events, territory, admin_regions, settlements, battles };
 }
 
 const formatYear = (y: number) => (y < 0 ? `기원전 ${-y}년` : `서기 ${y === 0 ? 1 : y}년`);
@@ -39,6 +40,11 @@ async function main() {
   for (const a of d.actors) fillColor.push(a.id, a.color);
   fillColor.push('rgba(0,0,0,0)');
 
+  // 전투 마커 색 = 승자 세력색 (로마=적, 카르타고=청). 흰 테두리로 정착지와 구분.
+  const victorColor: any = ['match', ['get', 'victor']];
+  for (const a of d.actors) victorColor.push(a.id, a.color);
+  victorColor.push('#333');
+
   // 시간가변 레이어: [레이어id, 기본필터(rank 등, 없으면 null)]. 연도 변경 = setFilter (setData 아님).
   const timed: [string, any[] | null][] = [
     ['territory-fill', null],
@@ -46,6 +52,7 @@ async function main() {
     ['admin-line', null],
     ['settle-major', ['<=', ['get', 'rank'], 1]],
     ['settle-minor', ['>=', ['get', 'rank'], 2]],
+    ['battle', null],
   ];
   const filterFor = (base: any[] | null, y: number): any =>
     base ? ['all', base, ...dateWindow(y).slice(1)] : dateWindow(y);
@@ -68,6 +75,11 @@ async function main() {
     circle('settle-major', 3, 6);
     circle('settle-minor', 5, 4);
 
+    // 전투 지점 — 승자색 원 + 흰 테두리. 시간필터로 발생 연도부터 등장.
+    map.addSource('battles', { type: 'geojson', data: d.battles as any });
+    map.addLayer({ id: 'battle', type: 'circle', source: 'battles',
+      paint: { 'circle-radius': 7, 'circle-color': victorColor, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
+
     const popup = (name: string, extra: string, at: any) =>
       new maplibregl.Popup({ closeButton: false }).setLngLat(at).setHTML(`<b>${name}</b><br><small>${extra}</small>`).addTo(map);
     map.on('click', 'territory-fill', e => {
@@ -87,6 +99,16 @@ async function main() {
       map.on('mouseenter', l, () => (map.getCanvas().style.cursor = 'pointer'));
       map.on('mouseleave', l, () => (map.getCanvas().style.cursor = ''));
     }
+
+    map.on('click', 'battle', e => {
+      const p: any = e.features?.[0]?.properties ?? {};
+      const win = d.actors.find(a => a.id === p.victor);
+      popup(p.name_ko,
+        `${p.general_a} vs ${p.general_b} · 승자 ${win ? win.label : p.victor} · 병력 ${p.strength_a.toLocaleString()}:${p.strength_b.toLocaleString()}`,
+        (e.features![0].geometry as any).coordinates);
+    });
+    map.on('mouseenter', 'battle', () => (map.getCanvas().style.cursor = 'pointer'));
+    map.on('mouseleave', 'battle', () => (map.getCanvas().style.cursor = ''));
 
     loaded = true;
     applyYear(year);

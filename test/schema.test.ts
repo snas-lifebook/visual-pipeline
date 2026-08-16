@@ -15,8 +15,17 @@ function loadDataset(): Dataset {
     territory: rd('layers/territory.geojson'),
     admin_regions: rd('layers/admin_regions.geojson'),
     settlements: rd('layers/settlements.geojson'),
+    battles: rd('layers/battles.geojson'),
   };
 }
+
+// Polygon·MultiPolygon 무관하게 모든 말단 [x,y] 좌표 추출 (해안선 클립 후 territory는 MultiPolygon일 수 있음)
+const allCoords = (geom: any): number[][] => {
+  const out: number[][] = [];
+  const walk = (a: any) => { if (typeof a[0] === 'number') out.push(a); else a.forEach(walk); };
+  walk(geom.coordinates);
+  return out;
+};
 
 const ownerOf = (d: Dataset, region: string, year: number) =>
   d.territory.features.find(f => f.properties.region === region && withinDate(f.properties, year))?.properties.actor ?? null;
@@ -29,8 +38,9 @@ describe('rome-753-218 데이터셋 계약 (시간필터 모델)', () => {
   });
 
   it('좌표 [lng,lat] 순서 (flip 방지)', () => {
-    const lngs = d.territory.features.flatMap(f => f.geometry.coordinates[0].map((c: number[]) => c[0]));
-    const lats = d.territory.features.flatMap(f => f.geometry.coordinates[0].map((c: number[]) => c[1]));
+    const pts = d.territory.features.flatMap(f => allCoords(f.geometry));
+    const lngs = pts.map(c => c[0]);
+    const lats = pts.map(c => c[1]);
     expect(Math.min(...lngs)).toBeGreaterThan(-15);
     expect(Math.max(...lngs)).toBeLessThan(30);
     expect(Math.min(...lats)).toBeGreaterThan(30);

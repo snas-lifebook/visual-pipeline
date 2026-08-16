@@ -1,0 +1,35 @@
+{
+  "_convention": "general_a·strength_a = belligerents[0](로마) 측, general_b·strength_b = belligerents[1](카르타고) 측. victor = actor id. 병력·좌표는 사료(Polybius·Livy) 근사.",
+  "battles": [
+    {
+      "id": "trebia", "name_ko": "트레비아 전투", "year": -218, "lng": 9.7, "lat": 45.0,
+      "belligerents": ["rome", "carthage"], "general_a": "셈프로니우스 롱구스", "general_b": "한니발",
+      "victor": "carthage", "strength_a": 40000, "strength_b": 40000, "source": "book", "confidence": "high"
+    },
+    {
+      "id": "trasimene", "name_ko": "트라시메노 호수 전투", "year": -217, "lng": 12.1, "lat": 43.2,
+      "belligerents": ["rome", "carthage"], "general_a": "플라미니우스", "general_b": "한니발",
+      "victor": "carthage", "strength_a": 30000, "strength_b": 50000, "source": "book", "confidence": "high"
+    },
+    {
+      "id": "cannae", "name_ko": "칸나이 전투", "year": -216, "lng": 16.13, "lat": 41.31,
+      "belligerents": ["rome", "carthage"], "general_a": "바로·파울루스", "general_b": "한니발",
+      "victor": "carthage", "strength_a": 80000, "strength_b": 50000, "source": "book", "confidence": "high"
+    },
+    {
+      "id": "metaurus", "name_ko": "메타우루스 전투", "year": -207, "lng": 13.0, "lat": 43.7,
+      "belligerents": ["rome", "carthage"], "general_a": "리비우스·네로", "general_b": "하스드루발 바르카",
+      "victor": "rome", "strength_a": 40000, "strength_b": 30000, "source": "book", "confidence": "medium"
+    },
+    {
+      "id": "ilipa", "name_ko": "일리파 전투", "year": -206, "lng": -5.98, "lat": 37.5,
+      "belligerents": ["rome", "carthage"], "general_a": "스키피오", "general_b": "하스드루발 기스고",
+      "victor": "rome", "strength_a": 48000, "strength_b": 60000, "source": "book", "confidence": "medium"
+    },
+    {
+      "id": "zama", "name_ko": "자마 전투", "year": -202, "lng": 9.0, "lat": 36.3,
+      "belligerents": ["rome", "carthage"], "general_a": "스키피오", "general_b": "한니발",
+      "victor": "rome", "strength_a": 40000, "strength_b": 50000, "source": "book", "confidence": "low"
+    }
+  ]
+}

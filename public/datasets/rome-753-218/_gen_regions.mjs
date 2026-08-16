@@ -1,7 +1,9 @@
 // atlas 프로토타입의 하드코딩 REGIONS([lat,lon])를 GeoJSON([lng,lat])으로 승격.
-// ponytail: 좌표는 atlas의 러프 근사를 재사용(confidence:low). 정확한 BC218 국경은
-// Natural Earth 해안선을 스냅해 손으로 트레이싱하는 후속 작업으로 교체한다(SCHEMA 참조).
-import { writeFileSync } from 'node:fs';
+// 러프 링을 실제 해안선(Natural Earth 10m land, PD)과 교집합해 육지만 남긴다 → 섬은
+// 실제 윤곽 획득, 해안 지역은 바다 오버행 제거. 내륙 경계는 여전히 러프 근사.
+// (다음 정확도: 내륙 국경 트레이싱. SCHEMA 참조.)
+import polygonClipping from 'polygon-clipping';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -29,16 +31,28 @@ const NAME = {
   sardinia:'사르디니아', corsica:'코르시카', africa_carthage:'아프리카(카르타고)', hispania_east:'히스파니아 동부',
 };
 
+const DIR = dirname(fileURLToPath(import.meta.url));
+// 실제 해안선(PD)으로 러프 링 클립. features[0]=전체 육지 MultiPolygon.
+const land = JSON.parse(readFileSync(join(DIR, '_sources', 'ne_land_med.geojson'), 'utf8'))
+  .features[0].geometry.coordinates;
+const r3 = (n) => Math.round(n * 1000) / 1000;
+const round = (polys) => polys.map((poly) => poly.map((r) => r.map(([x, y]) => [r3(x), r3(y)])));
+
 const features = Object.entries(REGIONS).map(([id, ring]) => {
   const coords = ring.map(([lat, lon]) => [lon, lat]);   // flip → [lng,lat]
   coords.push(coords[0]);                                 // close ring
+  const clip = round(polygonClipping.intersection([coords], land)); // 러프 링 ∩ 육지
+  const [geometry, confidence] =
+    clip.length === 1 ? [{ type: 'Polygon', coordinates: clip[0] }, 'medium']
+    : clip.length > 1 ? [{ type: 'MultiPolygon', coordinates: clip }, 'medium']
+    : [{ type: 'Polygon', coordinates: [coords] }, 'low'];  // 클립 실패 → 원본 링 유지
   return {
     type: 'Feature',
-    properties: { id, layer: 'regions', name_ko: NAME[id], source: 'book+web', confidence: 'low', minzoom: 0, rank: 2 },
-    geometry: { type: 'Polygon', coordinates: [coords] },
+    properties: { id, layer: 'regions', name_ko: NAME[id], source: 'book+web', confidence, minzoom: 0, rank: 2 },
+    geometry,
   };
 });
 
-const out = join(dirname(fileURLToPath(import.meta.url)), 'layers', 'regions.geojson');
+const out = join(DIR, 'layers', 'regions.geojson');
 writeFileSync(out, JSON.stringify({ type: 'FeatureCollection', features }, null, 1) + '\n');
 console.log(`wrote ${features.length} regions → ${out}`);

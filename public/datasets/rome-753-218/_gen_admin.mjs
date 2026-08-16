@@ -9,6 +9,8 @@ const DIR = dirname(fileURLToPath(import.meta.url));
 const rd = (p) => JSON.parse(readFileSync(join(DIR, p), 'utf8'));
 const regions = rd('layers/regions.geojson');
 const geomById = new Map(regions.features.map((f) => [f.properties.id, f.geometry]));
+// member 지오메트리가 Polygon이든 MultiPolygon(해안선 클립 결과)이든 폴리곤 배열로 평탄화.
+const toPolygons = (geom) => (geom.type === 'MultiPolygon' ? geom.coordinates : [geom.coordinates]);
 
 // 속주: { id, name_ko, name_ancient, members(regionIds), valid_from, note? }
 const PROVINCES = [
@@ -23,7 +25,7 @@ const features = PROVINCES.map((p) => ({
     id: p.id, layer: 'admin_regions', name_ko: p.name_ko, name_ancient: p.name_ancient,
     valid_from: p.valid_from, source: 'book+web', confidence: 'medium', ...(p.note ? { note: p.note } : {}),
   },
-  geometry: { type: 'MultiPolygon', coordinates: p.members.map((m) => geomById.get(m).coordinates) },
+  geometry: { type: 'MultiPolygon', coordinates: p.members.flatMap((m) => toPolygons(geomById.get(m))) },
 }));
 
 const out = join(DIR, 'layers', 'admin_regions.geojson');

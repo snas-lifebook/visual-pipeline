@@ -15,13 +15,17 @@ npm test           # vitest watch
 
 `public/datasets/<domain>/` 하나가 한 캠페인. `manifest.json` + `layers/*.geojson` + `entities/*.json`. 좌표는 **GeoJSON [lng,lat]**(Leaflet [lat,lon] 아님). 계약·타입은 `src/schema.ts`.
 
-- `rome-753-218` — 로마 건국~제2차 포에니(기원전 753~218). atlas 프로토타입 포팅.
-- 데이터 재생성: `npm run gen` (regions.geojson + territory.geojson). `validate`/`build`가 자동 실행.
+- `rome-753-218` — 로마 건국~제2차 포에니 종전(기원전 753~201). 레이어: territory·admin_regions·settlements·**battles**. 데이터셋 사용법은 `public/datasets/rome-753-218/README.md`.
+- 데이터 재생성: `npm run gen` (regions·territory·admin·battles). `validate`/`build`가 자동 실행.
 
 **시간필터 모델**: 시간가변 피처는 `valid_from`/`valid_to`를 갖고, 연도 변경 시 `setFilter`로 필터한다(`setData` 재계산 아님). territory는 `_gen_territory.mjs`가 스냅샷 오너십(`entities/territory.json`) × 지오메트리(`regions.geojson`)를 조인해 "지역×통치구간" 날짜 피처로 생성.
 
-> **provisional**: 현재 국경은 러프 근사(confidence:low). 정확한 BC218 트레이싱은 Natural Earth(PD) 기반 후속 작업. GPL/ODbL 데이터셋(historical-basemaps·AWMC)은 재배포하지 않고 트레이싱 참조로만 쓴다.
+> **provisional**: region 폴리곤은 실제 해안선(Natural Earth 10m land, PD)으로 클립해 해안·섬은 실측 윤곽, 내륙 경계는 여전히 러프 근사(confidence:medium/low). GPL/NC/상용 데이터(historical-basemaps=GPL-3.0·AWMC=CC-BY-NC·DARE)는 재배포하지 않고 트레이싱 참조로만 쓴다. 재배포는 PD/자체 트레이싱만.
+
+## 비전·로드맵
+
+시간구동 인터랙티브 지도(지배·도시·전투·이동 → Three.js 토큰·3D 지형·시뮬)의 6축 매핑·상태·소스 라이선스는 `docs/roadmap.md` 참조.
 
 ## 스택
 
-MapLibre GL · Vite · TypeScript · Vitest. Konva 토큰 오버레이(군단 이동 연출)·내보내기는 후속 레이어.
+MapLibre GL · Vite · TypeScript · Vitest. 이동 경로 위 장군 토큰(장기 말) 연출은 **Three.js 오버레이**·타임슬라이스 내보내기와 함께 후속 레이어(`docs/roadmap.md`).
