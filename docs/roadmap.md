@@ -9,10 +9,10 @@
 | 축 | 무엇 | 데이터/엔진 | 상태 |
 |----|------|------------|------|
 | 지배 | 연도별 세력 판도 | `territory`(지역×통치구간, dated) + `actors` · `setFilter` | **완료** |
-| 도시·자원 | 정착지, 클릭 시 자원·정보 | `settlements`(dated Point) · 클릭 팝업 | 도시=완료 / 자원·상세패널=할일 |
+| 도시·자원 | 정착지, 클릭 시 자원·정보 | `settlements`(dated Point, `resource`/`terrain`) · 클릭 상세 패널(`panel.ts`) | **완료** |
 | 전투 | 전투 아이콘 + 장군·승자·병력 | `battles`(dated Point) · 승자색 마커 · 클릭 팝업 | **완료(포에니 시드)** |
 | 이동 | 인물·군단 이동 경로 | `movements`(dated LineString) · setFilter로 구간 누적 | **완료(한니발 원정로)** |
-| Three.js 토큰 | 장군을 장기 말처럼 이동 연출 | `src/token3d.ts` CustomLayerInterface+three, 연도별 위치 | **착수(스냅 위치)** |
+| Three.js 토큰 | 장군을 장기 말처럼 이동 연출 | `src/token3d.ts` CustomLayerInterface+three, 연도별 위치 500ms 이징 + pitch 30 | **완료(단일 토큰)** |
 | 3D 지형·시뮬 | 산지 파악, 한니발 알프스 횡단 | MapLibre DEM 지형 + 경로 시뮬 | 할일 |
 
 ## 다운로드 (AI·팀원)
@@ -31,13 +31,12 @@
 | Polybius·Livy (고대사료) | PD | 전투·장군·병력 수치 | O |
 
 ## 다음 증분 (우선순위)
-1. **Three.js 토큰 마감** — 연도 간 이징/행군 애니메이션(현재 스냅), 지도 pitch로 입체감, 토큰 크기(`TOKEN_METERS`) 튜닝, 말 형태 개선. 데이터는 `movements` waypoints 공유.
-2. **자원·지형 상세 패널** — region/settlement props 확장 + 클릭 시 사이드 패널.
-3. **타임슬라이스 내보내기** — 현재 연도에 보이는 피처를 GeoJSON으로 다운로드하는 버튼.
-4. **내륙 국경 정밀 트레이싱** — 해안선은 클립 완료, 내륙 경계는 러프.
-5. **3D 지형 + 알프스 시뮬** — MapLibre DEM + 경로 고도 프로파일.
+1. **토큰 행군 애니메이션** — 현재는 도착 도시로 이징. 다음은 원정로 세그먼트를 따라 행군 + 다중 토큰(스키피오 등 2번째 장군 — `positionAtYear`를 route별로 분리 필요).
+2. **내륙 국경 정밀 트레이싱** — 해안선은 클립 완료, 내륙 경계는 러프.
+3. **2번째 데이터셋** — 삼국지/초한지 등으로 도메인 무관성 증명(스키마 재사용).
+4. **3D 지형 + 알프스 시뮬** — MapLibre DEM + 경로 고도 프로파일.
 
-완료: 이동 경로(`movements` dated LineString, 한니발 원정로 218→202) · Three.js 토큰 착수(`src/token3d.ts`, 연도별 스냅 위치).
+완료: 이동 경로(`movements`, 한니발 원정로 218→202) · Three.js 토큰(연도별 이징 + pitch 입체감) · 자원/지형 상세 패널(`panel.ts`, 팝업 대체) · 타임슬라이스 내보내기(`export.ts`, 현재 연도 GeoJSON 다운로드) · 콘텐츠 확장(주요 도시 9 + resource/terrain + 사건 4).
 
 ## 현재 데이터셋
 `rome-753-218` (폴더명은 초기 스코프 유지 · 실제 범위 기원전 753~201, 제2차 포에니 종전까지). 전투 시드: 트레비아·트라시메노·칸나이·메타우루스·일리파·자마.
