@@ -1,0 +1,23 @@
+{
+  "_convention": "waypoints는 연도순. _gen_movements가 연속 쌍을 dated LineString 세그먼트로. 세그먼트 valid_from=도착 waypoint의 year(그 해에 그려짐), valid_to=OPEN_FUTURE(누적). 토큰 위치=valid_from<=year인 마지막 세그먼트 끝점. 좌표는 Pleiades·사료(Polybius) 근사.",
+  "routes": [
+    {
+      "id": "hannibal", "name_ko": "한니발 원정로", "actor": "carthage",
+      "source": "book", "confidence": "medium",
+      "waypoints": [
+        { "year": -218, "lng": -0.98, "lat": 37.60, "label": "신카르타고 출발" },
+        { "year": -218, "lng": 0.52, "lat": 40.81, "label": "에브로 도하" },
+        { "year": -218, "lng": 2.87, "lat": 42.46, "label": "피레네 통과" },
+        { "year": -218, "lng": 4.80, "lat": 44.00, "label": "론강 도하" },
+        { "year": -218, "lng": 7.00, "lat": 44.70, "label": "알프스 횡단" },
+        { "year": -218, "lng": 7.70, "lat": 45.07, "label": "포 평원 진입" },
+        { "year": -218, "lng": 9.70, "lat": 45.00, "label": "트레비아" },
+        { "year": -217, "lng": 12.10, "lat": 43.20, "label": "트라시메노" },
+        { "year": -216, "lng": 16.13, "lat": 41.31, "label": "칸나이" },
+        { "year": -212, "lng": 17.10, "lat": 39.08, "label": "브루티움 원정" },
+        { "year": -203, "lng": 10.40, "lat": 35.80, "label": "아프리카 소환" },
+        { "year": -202, "lng": 9.00, "lat": 36.30, "label": "자마" }
+      ]
+    }
+  ]
+}

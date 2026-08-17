@@ -22,6 +22,7 @@ export interface Dataset {
   admin_regions: FeatureCollection;  // 학술 속주 경계 (dated) — _gen_admin.mjs 생성. territory와 별개
   settlements: FeatureCollection;
   battles: FeatureCollection;        // 전투 지점 (dated Point) — _gen_battles.mjs 생성
+  movements: FeatureCollection;      // 원정로 세그먼트 (dated LineString) — _gen_movements.mjs 생성
 }
 
 // 열린 시간범위 sentinel (valid_from/valid_to 없으면 상시). _gen_territory.mjs OPEN_FUTURE와 일치.
@@ -40,6 +41,19 @@ export function dateWindow(year: number): any[] {
   return ['all',
     ['<=', ['coalesce', ['get', 'valid_from'], OPEN_PAST], year],
     ['>', ['coalesce', ['get', 'valid_to'], OPEN_FUTURE], year]];
+}
+
+/** movements 세그먼트 중 year 시점 토큰 위치 = valid_from<=year인 마지막 세그먼트의 끝점(=도착지). 없으면 null. 순수 헬퍼. */
+export function positionAtYear(features: Feature[], year: number): [number, number] | null {
+  let best: Feature | null = null;
+  let bestFrom = -Infinity;
+  for (const f of features) {
+    const vf = f.properties.valid_from ?? OPEN_PAST;
+    if (vf <= year && vf >= bestFrom) { best = f; bestFrom = vf; }
+  }
+  if (!best) return null;
+  const line = best.geometry.coordinates as number[][];
+  return line[line.length - 1] as [number, number];
 }
 
 const SOURCES = new Set(['book', 'web', 'book+web']);
@@ -145,6 +159,18 @@ export function validateDataset(d: Dataset): string[] {
     if (!CONFS.has(p.confidence)) err.push(`battles ${id}: confidence 불명`);
     if (!(p.valid_from < p.valid_to)) err.push(`battles ${id}: valid_from < valid_to 아님`);
     if (p.year < d.manifest.time.from || p.year > d.manifest.time.to) err.push(`battles ${id}: 연도 ${p.year} 시간범위 밖`);
+  }
+
+  // movements: 원정로 세그먼트 (dated LineString). actor는 정의된 actor여야.
+  for (const f of d.movements.features) {
+    const p = f.properties;
+    const id = p?.id ?? '(id없음)';
+    if (f.geometry?.type !== 'LineString') err.push(`movements ${id}: LineString 아님`);
+    checkCoords(f.geometry, `movements ${id}`, err);
+    if (!actorIds.has(p.actor)) err.push(`movements ${id}: 미정의 actor ${p.actor}`);
+    if (!SOURCES.has(p.source)) err.push(`movements ${id}: source 불명`);
+    if (!CONFS.has(p.confidence)) err.push(`movements ${id}: confidence 불명`);
+    if (!(p.valid_from < p.valid_to)) err.push(`movements ${id}: valid_from < valid_to 아님`);
   }
 
   // events

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
-import { validateDataset, withinDate, type Dataset } from '../src/schema';
+import { validateDataset, withinDate, positionAtYear, type Dataset } from '../src/schema';
 
 const BASE = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'datasets', 'rome-753-218');
 const rd = (p: string) => JSON.parse(readFileSync(join(BASE, p), 'utf8'));
@@ -16,6 +16,7 @@ function loadDataset(): Dataset {
     admin_regions: rd('layers/admin_regions.geojson'),
     settlements: rd('layers/settlements.geojson'),
     battles: rd('layers/battles.geojson'),
+    movements: rd('layers/movements.geojson'),
   };
 }
 
@@ -71,5 +72,12 @@ describe('rome-753-218 데이터셋 계약 (시간필터 모델)', () => {
     // 정식 속주는 -227부터 — -240엔 속주 아님, -218엔 속주
     expect(withinDate(sicilia.properties, -240)).toBe(false);
     expect(withinDate(sicilia.properties, -218)).toBe(true);
+  });
+
+  it('한니발 토큰 위치: 원정 전(-240) 없음, -216 칸나이, -202 자마', () => {
+    const f = d.movements.features;
+    expect(positionAtYear(f, -240)).toBeNull();
+    expect(positionAtYear(f, -216)).toEqual([16.13, 41.31]); // 칸나이 도착
+    expect(positionAtYear(f, -202)).toEqual([9.0, 36.3]);    // 자마
   });
 });

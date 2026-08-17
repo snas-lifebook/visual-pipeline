@@ -1,0 +1,335 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@0",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "에브로 도하",
+    "from_year": -218,
+    "to_year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -0.98,
+      37.6
+     ],
+     [
+      0.52,
+      40.81
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@1",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "피레네 통과",
+    "from_year": -218,
+    "to_year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      0.52,
+      40.81
+     ],
+     [
+      2.87,
+      42.46
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@2",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "론강 도하",
+    "from_year": -218,
+    "to_year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      2.87,
+      42.46
+     ],
+     [
+      4.8,
+      44
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@3",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "알프스 횡단",
+    "from_year": -218,
+    "to_year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      4.8,
+      44
+     ],
+     [
+      7,
+      44.7
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@4",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "포 평원 진입",
+    "from_year": -218,
+    "to_year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      7,
+      44.7
+     ],
+     [
+      7.7,
+      45.07
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@5",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "트레비아",
+    "from_year": -218,
+    "to_year": -218,
+    "valid_from": -218,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      7.7,
+      45.07
+     ],
+     [
+      9.7,
+      45
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@6",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "트라시메노",
+    "from_year": -218,
+    "to_year": -217,
+    "valid_from": -217,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      9.7,
+      45
+     ],
+     [
+      12.1,
+      43.2
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@7",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "칸나이",
+    "from_year": -217,
+    "to_year": -216,
+    "valid_from": -216,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      12.1,
+      43.2
+     ],
+     [
+      16.13,
+      41.31
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@8",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "브루티움 원정",
+    "from_year": -216,
+    "to_year": -212,
+    "valid_from": -212,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      16.13,
+      41.31
+     ],
+     [
+      17.1,
+      39.08
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@9",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "아프리카 소환",
+    "from_year": -212,
+    "to_year": -203,
+    "valid_from": -203,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      17.1,
+      39.08
+     ],
+     [
+      10.4,
+      35.8
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "hannibal@10",
+    "layer": "movements",
+    "route": "hannibal",
+    "name_ko": "한니발 원정로",
+    "actor": "carthage",
+    "label": "자마",
+    "from_year": -203,
+    "to_year": -202,
+    "valid_from": -202,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      10.4,
+      35.8
+     ],
+     [
+      9,
+      36.3
+     ]
+    ]
+   }
+  }
+ ]
+}

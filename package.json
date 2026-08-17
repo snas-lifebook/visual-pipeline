@@ -10,15 +10,17 @@
     "validate": "npm run gen && vitest run",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "gen": "node public/datasets/rome-753-218/_gen_regions.mjs && node public/datasets/rome-753-218/_gen_territory.mjs && node public/datasets/rome-753-218/_gen_admin.mjs && node public/datasets/rome-753-218/_gen_battles.mjs"
+    "gen": "node public/datasets/rome-753-218/_gen_regions.mjs && node public/datasets/rome-753-218/_gen_territory.mjs && node public/datasets/rome-753-218/_gen_admin.mjs && node public/datasets/rome-753-218/_gen_battles.mjs && node public/datasets/rome-753-218/_gen_movements.mjs"
   },
   "devDependencies": {
+    "@types/three": "^0.185.4",
     "polygon-clipping": "^0.15.7",
     "typescript": "~6.0.2",
     "vite": "^8.2.0",
     "vitest": "^4.1.10"
   },
   "dependencies": {
-    "maplibre-gl": "^6.3.0"
+    "maplibre-gl": "^6.3.0",
+    "three": "^0.185.1"
   }
 }

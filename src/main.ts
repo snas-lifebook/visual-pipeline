@@ -1,7 +1,10 @@
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
-import { type Dataset, dateWindow } from './schema';
+import { type Dataset, dateWindow, positionAtYear } from './schema';
+import { createHannibalToken } from './token3d';
+import { createPanel } from './panel';
+import { initExport } from './export';
 
 const BASE = '/datasets/rome-753-218';
 const $ = <T extends HTMLElement>(s: string) => document.querySelector(s) as T;
@@ -13,12 +16,12 @@ async function j(p: string) {
 }
 
 async function load(): Promise<Dataset> {
-  const [manifest, actorsW, eventsW, territory, admin_regions, settlements, battles] = await Promise.all([
+  const [manifest, actorsW, eventsW, territory, admin_regions, settlements, battles, movements] = await Promise.all([
     j('manifest.json'), j('entities/actors.json'), j('entities/events.json'),
     j('layers/territory.geojson'), j('layers/admin_regions.geojson'), j('layers/settlements.geojson'),
-    j('layers/battles.geojson'),
+    j('layers/battles.geojson'), j('layers/movements.geojson'),
   ]);
-  return { manifest, actors: actorsW.actors, events: eventsW.events, territory, admin_regions, settlements, battles };
+  return { manifest, actors: actorsW.actors, events: eventsW.events, territory, admin_regions, settlements, battles, movements };
 }
 
 const formatYear = (y: number) => (y < 0 ? `기원전 ${-y}년` : `서기 ${y === 0 ? 1 : y}년`);
@@ -27,14 +30,17 @@ async function main() {
   const d = await load();
   let year = d.manifest.time.to;
   let loaded = false;
+  let hannibal: ReturnType<typeof createHannibalToken> | null = null;
 
   const style: any = {
     version: 8,
     sources: {},
     layers: [{ id: 'sea', type: 'background', paint: { 'background-color': '#cfe0e6' } }],
   };
-  const map = new maplibregl.Map({ container: 'map', style, center: d.manifest.center, zoom: d.manifest.zoom, minZoom: 3, maxZoom: 9 });
+  // pitch: 토큰(장기 말) 입체감. ponytail: 지도 기울기 노브 — 평면 원하면 0.
+  const map = new maplibregl.Map({ container: 'map', style, center: d.manifest.center, zoom: d.manifest.zoom, minZoom: 3, maxZoom: 9, pitch: 30 });
   map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+  const panel = createPanel(d);
 
   const fillColor: any = ['match', ['get', 'actor']];
   for (const a of d.actors) fillColor.push(a.id, a.color);
@@ -53,6 +59,7 @@ async function main() {
     ['settle-major', ['<=', ['get', 'rank'], 1]],
     ['settle-minor', ['>=', ['get', 'rank'], 2]],
     ['battle', null],
+    ['movement', null],
   ];
   const filterFor = (base: any[] | null, y: number): any =>
     base ? ['all', base, ...dateWindow(y).slice(1)] : dateWindow(y);
@@ -80,35 +87,30 @@ async function main() {
     map.addLayer({ id: 'battle', type: 'circle', source: 'battles',
       paint: { 'circle-radius': 7, 'circle-color': victorColor, 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
 
-    const popup = (name: string, extra: string, at: any) =>
-      new maplibregl.Popup({ closeButton: false }).setLngLat(at).setHTML(`<b>${name}</b><br><small>${extra}</small>`).addTo(map);
-    map.on('click', 'territory-fill', e => {
-      const p: any = e.features?.[0]?.properties ?? {};
-      const actor = d.actors.find(a => a.id === p.actor);
-      popup(p.name_ko, `${actor ? actor.label : '무주공산'} · 신뢰도 ${p.confidence}`, e.lngLat);
-    });
-    map.on('click', 'admin-line', e => {
-      const p: any = e.features?.[0]?.properties ?? {};
-      popup(p.name_ko, `속주 ${p.name_ancient ?? ''} · 설치 기원전 ${-p.valid_from}년`, e.lngLat);
-    });
-    for (const l of ['settle-major', 'settle-minor']) {
-      map.on('click', l, e => {
-        const p: any = e.features?.[0]?.properties ?? {};
-        popup(p.name_ko, `${p.name_ancient ?? ''} → ${p.name_modern ?? ''} · ${p.source}`, (e.features![0].geometry as any).coordinates);
-      });
-      map.on('mouseenter', l, () => (map.getCanvas().style.cursor = 'pointer'));
-      map.on('mouseleave', l, () => (map.getCanvas().style.cursor = ''));
+    // 원정로(movements) — 시간 진행에 따라 구간이 그려짐. 라우트색(actor fill과 대비되게).
+    map.addSource('movements', { type: 'geojson', data: d.movements as any });
+    map.addLayer({ id: 'movement', type: 'line', source: 'movements',
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#e67e22', 'line-width': 3, 'line-dasharray': [2, 1] } });
+
+    // 클릭 → 상세 사이드 패널(panel.ts). 레이어별 kind 매핑, 팝업 대체.
+    const kindByLayer: Record<string, 'territory' | 'settlement' | 'battle' | 'movement' | 'admin'> = {
+      'territory-fill': 'territory', 'admin-line': 'admin',
+      'settle-major': 'settlement', 'settle-minor': 'settlement',
+      'battle': 'battle', 'movement': 'movement',
+    };
+    for (const [layerId, kind] of Object.entries(kindByLayer)) {
+      map.on('click', layerId, e => panel.show(kind, e.features?.[0]?.properties ?? {}));
+      map.on('mouseenter', layerId, () => (map.getCanvas().style.cursor = 'pointer'));
+      map.on('mouseleave', layerId, () => (map.getCanvas().style.cursor = ''));
     }
 
-    map.on('click', 'battle', e => {
-      const p: any = e.features?.[0]?.properties ?? {};
-      const win = d.actors.find(a => a.id === p.victor);
-      popup(p.name_ko,
-        `${p.general_a} vs ${p.general_b} · 승자 ${win ? win.label : p.victor} · 병력 ${p.strength_a.toLocaleString()}:${p.strength_b.toLocaleString()}`,
-        (e.features![0].geometry as any).coordinates);
-    });
-    map.on('mouseenter', 'battle', () => (map.getCanvas().style.cursor = 'pointer'));
-    map.on('mouseleave', 'battle', () => (map.getCanvas().style.cursor = ''));
+    // Three.js 토큰(한니발) — 격리: 실패해도 베이스 지도는 유지.
+    try {
+      const carthage = d.actors.find(a => a.id === 'carthage')?.color ?? '#2f6b6b';
+      hannibal = createHannibalToken(carthage);
+      map.addLayer(hannibal.layer);
+    } catch { hannibal = null; }
 
     loaded = true;
     applyYear(year);
@@ -137,6 +139,7 @@ async function main() {
     const ev = nearestEvent(y);
     note.textContent = ev ? `${formatYear(ev.year)} · ${ev.label}` : '';
     applyFilters(y);
+    if (hannibal) hannibal.setPosition(positionAtYear(d.movements.features, y));
   }
   slider.addEventListener('input', () => applyYear(parseInt(slider.value, 10)));
 
@@ -167,6 +170,9 @@ async function main() {
 
   // 범례
   $<HTMLElement>('#legend').innerHTML = d.actors.map(a => `<span><i style="background:${a.color}"></i>${a.label}</span>`).join('');
+
+  // 타임슬라이스 내보내기 버튼(export.ts).
+  initExport(d, () => year);
 
   applyYear(year);
 }

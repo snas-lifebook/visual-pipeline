@@ -11,8 +11,8 @@
 | 지배 | 연도별 세력 판도 | `territory`(지역×통치구간, dated) + `actors` · `setFilter` | **완료** |
 | 도시·자원 | 정착지, 클릭 시 자원·정보 | `settlements`(dated Point) · 클릭 팝업 | 도시=완료 / 자원·상세패널=할일 |
 | 전투 | 전투 아이콘 + 장군·승자·병력 | `battles`(dated Point) · 승자색 마커 · 클릭 팝업 | **완료(포에니 시드)** |
-| 이동 | 인물·군단 이동 경로 | `movements`(dated LineString) — 신규 레이어 | 할일 |
-| Three.js 토큰 | 장군을 장기 말처럼 이동 연출 | MapLibre 위 Three.js 오버레이(이동 경로를 시간에 따라 애니메이션) | 할일 |
+| 이동 | 인물·군단 이동 경로 | `movements`(dated LineString) · setFilter로 구간 누적 | **완료(한니발 원정로)** |
+| Three.js 토큰 | 장군을 장기 말처럼 이동 연출 | `src/token3d.ts` CustomLayerInterface+three, 연도별 위치 | **착수(스냅 위치)** |
 | 3D 지형·시뮬 | 산지 파악, 한니발 알프스 횡단 | MapLibre DEM 지형 + 경로 시뮬 | 할일 |
 
 ## 다운로드 (AI·팀원)
@@ -31,11 +31,13 @@
 | Polybius·Livy (고대사료) | PD | 전투·장군·병력 수치 | O |
 
 ## 다음 증분 (우선순위)
-1. **이동 경로(`movements`)** — 한니발 원정로(이베리아→에브로→피레네→론→알프스→포 평원→이탈리아)를 dated LineString으로. 시간 진행에 따라 구간 공개.
-2. **Three.js 토큰** — 이동 경로 위 장군 말을 애니메이션(위 이동 레이어를 소비).
-3. **자원·지형 상세 패널** — region/settlement props 확장 + 클릭 시 사이드 패널.
-4. **타임슬라이스 내보내기** — 현재 연도에 보이는 피처를 GeoJSON으로 다운로드하는 버튼.
+1. **Three.js 토큰 마감** — 연도 간 이징/행군 애니메이션(현재 스냅), 지도 pitch로 입체감, 토큰 크기(`TOKEN_METERS`) 튜닝, 말 형태 개선. 데이터는 `movements` waypoints 공유.
+2. **자원·지형 상세 패널** — region/settlement props 확장 + 클릭 시 사이드 패널.
+3. **타임슬라이스 내보내기** — 현재 연도에 보이는 피처를 GeoJSON으로 다운로드하는 버튼.
+4. **내륙 국경 정밀 트레이싱** — 해안선은 클립 완료, 내륙 경계는 러프.
 5. **3D 지형 + 알프스 시뮬** — MapLibre DEM + 경로 고도 프로파일.
+
+완료: 이동 경로(`movements` dated LineString, 한니발 원정로 218→202) · Three.js 토큰 착수(`src/token3d.ts`, 연도별 스냅 위치).
 
 ## 현재 데이터셋
 `rome-753-218` (폴더명은 초기 스코프 유지 · 실제 범위 기원전 753~201, 제2차 포에니 종전까지). 전투 시드: 트레비아·트라시메노·칸나이·메타우루스·일리파·자마.

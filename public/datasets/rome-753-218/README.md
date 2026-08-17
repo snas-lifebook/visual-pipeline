@@ -23,6 +23,7 @@
 | `admin_regions.geojson` | MultiPolygon | 2 | `id, name_ko, name_ancient, valid_from, source, confidence` | 행정 구역 오버레이. |
 | `settlements.geojson` | Point | 5 | `id, name_ko, name_ancient, name_modern, rank, minzoom, valid_from` | 도시·정착지 포인트. |
 | `battles.geojson` | Point | 6 | `id, name_ko, year, victor, general_a/general_b, strength_a/strength_b, belligerents, valid_from, valid_to` | 전투 지점(시간가변). `victor`=승자 actor id, `general_a`/`strength_a`=belligerents[0](로마) 측. `valid_from=year, valid_to=OPEN_FUTURE`(발생 후 마커 유지). `_gen_battles.mjs` 생성물. |
+| `movements.geojson` | LineString | 11 | `id, route, actor, label, from_year, to_year, valid_from, valid_to` | 원정로 세그먼트(시간가변). 연속 waypoint 쌍=1세그먼트, `valid_from`=도착 연도부터 그려짐(누적). Three.js 토큰이 같은 데이터의 `valid_from<=year` 마지막 세그먼트 끝점을 연도별 위치로 사용(`positionAtYear`). `entities/movements.json` → `_gen_movements.mjs` 생성물. |
 
 ## 엔티티 (`entities/*.json`)
 
@@ -34,7 +35,7 @@
 
 ## 시간 필터 모델
 
-시간가변 피처(`territory`·`battles`, 일부 `settlements`/`admin_regions`)는 `valid_from`/`valid_to`(연도, BC는 음수)를 갖는다. 연도 변경 시 **`setFilter`로 필터**하는 계약이다 — `setData`로 재계산하지 않는다. `manifest.time` = `{ from: -753, to: -201 }`.
+시간가변 피처(`territory`·`battles`·`movements`, 일부 `settlements`/`admin_regions`)는 `valid_from`/`valid_to`(연도, BC는 음수)를 갖는다. 연도 변경 시 **`setFilter`로 필터**하는 계약이다 — `setData`로 재계산하지 않는다. `manifest.time` = `{ from: -753, to: -201 }`.
 
 ## 출처·라이선스·정확도
 
