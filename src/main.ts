@@ -8,7 +8,8 @@ import { initExport } from './export';
 
 // 데이터셋 스위처: ?dataset=chuhan-206 으로 다른 도메인 로드(스키마 무관 증명). 기본=로마.
 const DATASET = new URLSearchParams(location.search).get('dataset') || 'rome-753-218';
-const BASE = `/datasets/${DATASET}`;
+// BASE_URL: dev='/', 빌드(GitHub Pages)='/visual-pipeline/'. 둘 다 끝에 슬래시라 그대로 이어붙인다.
+const BASE = `${import.meta.env.BASE_URL}datasets/${DATASET}`;
 const $ = <T extends HTMLElement>(s: string) => document.querySelector(s) as T;
 
 async function j(p: string) {
