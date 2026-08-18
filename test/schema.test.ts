@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, it, expect } from 'vitest';
-import { validateDataset, withinDate, positionAtYear, type Dataset } from '../src/schema';
+import { validateDataset, withinDate, positionByRoute, type Dataset } from '../src/schema';
 
 const BASE = join(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'datasets', 'rome-753-218');
 const rd = (p: string) => JSON.parse(readFileSync(join(BASE, p), 'utf8'));
@@ -76,8 +76,8 @@ describe('rome-753-218 데이터셋 계약 (시간필터 모델)', () => {
 
   it('한니발 토큰 위치: 원정 전(-240) 없음, -216 칸나이, -202 자마', () => {
     const f = d.movements.features;
-    expect(positionAtYear(f, -240)).toBeNull();
-    expect(positionAtYear(f, -216)).toEqual([16.13, 41.31]); // 칸나이 도착
-    expect(positionAtYear(f, -202)).toEqual([9.0, 36.3]);    // 자마
+    expect(positionByRoute(f, 'hannibal', -240)).toBeNull();
+    expect(positionByRoute(f, 'hannibal', -216)).toEqual([16.13, 41.31]); // 칸나이 도착
+    expect(positionByRoute(f, 'hannibal', -202)).toEqual([9.0, 36.3]);    // 자마
   });
 });

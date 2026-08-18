@@ -1,0 +1,6 @@
+{
+  "actors": [
+    { "id": "chu", "label": "초(項羽)", "color": "#8c2f2f", "source": "book", "confidence": "high" },
+    { "id": "han", "label": "한(劉邦)", "color": "#2f6b6b", "source": "book", "confidence": "high" }
+  ]
+}

@@ -1,12 +1,14 @@
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './style.css';
-import { type Dataset, dateWindow, positionAtYear } from './schema';
-import { createHannibalToken } from './token3d';
+import { type Dataset, dateWindow, positionByRoute, routeGeometry } from './schema';
+import { createToken } from './token3d';
 import { createPanel } from './panel';
 import { initExport } from './export';
 
-const BASE = '/datasets/rome-753-218';
+// 데이터셋 스위처: ?dataset=chuhan-206 으로 다른 도메인 로드(스키마 무관 증명). 기본=로마.
+const DATASET = new URLSearchParams(location.search).get('dataset') || 'rome-753-218';
+const BASE = `/datasets/${DATASET}`;
 const $ = <T extends HTMLElement>(s: string) => document.querySelector(s) as T;
 
 async function j(p: string) {
@@ -30,7 +32,7 @@ async function main() {
   const d = await load();
   let year = d.manifest.time.to;
   let loaded = false;
-  let hannibal: ReturnType<typeof createHannibalToken> | null = null;
+  let tokens: { route: string; token: ReturnType<typeof createToken> }[] = [];
 
   const style: any = {
     version: 8,
@@ -105,12 +107,18 @@ async function main() {
       map.on('mouseleave', layerId, () => (map.getCanvas().style.cursor = ''));
     }
 
-    // Three.js 토큰(한니발) — 격리: 실패해도 베이스 지도는 유지.
+    // Three.js 토큰 — movements의 distinct route마다 1개, 색=그 route actor 색. 격리: 실패해도 베이스 지도는 유지.
     try {
-      const carthage = d.actors.find(a => a.id === 'carthage')?.color ?? '#2f6b6b';
-      hannibal = createHannibalToken(carthage);
-      map.addLayer(hannibal.layer);
-    } catch { hannibal = null; }
+      const routeIds = [...new Set(d.movements.features.map(f => f.properties.route))];
+      tokens = routeIds.map(routeId => {
+        const actorId = d.movements.features.find(f => f.properties.route === routeId)?.properties.actor;
+        const color = d.actors.find(a => a.id === actorId)?.color ?? '#666';
+        const token = createToken(color);
+        token.setRoute(routeGeometry(d.movements.features, routeId).path);
+        map.addLayer(token.layer);
+        return { route: routeId, token };
+      });
+    } catch { tokens = []; }
 
     loaded = true;
     applyYear(year);
@@ -139,7 +147,7 @@ async function main() {
     const ev = nearestEvent(y);
     note.textContent = ev ? `${formatYear(ev.year)} · ${ev.label}` : '';
     applyFilters(y);
-    if (hannibal) hannibal.setPosition(positionAtYear(d.movements.features, y));
+    for (const { route, token } of tokens) token.setPosition(positionByRoute(d.movements.features, route, y));
   }
   slider.addEventListener('input', () => applyYear(parseInt(slider.value, 10)));
 

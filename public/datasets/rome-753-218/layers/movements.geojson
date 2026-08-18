@@ -330,6 +330,186 @@
      ]
     ]
    }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "scipio@0",
+    "layer": "movements",
+    "route": "scipio",
+    "name_ko": "스키피오 아프리카누스 원정로",
+    "actor": "rome",
+    "label": "카르타고노바 함락",
+    "from_year": -218,
+    "to_year": -209,
+    "valid_from": -209,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      1.25,
+      41.12
+     ],
+     [
+      -0.98,
+      37.6
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "scipio@1",
+    "layer": "movements",
+    "route": "scipio",
+    "name_ko": "스키피오 아프리카누스 원정로",
+    "actor": "rome",
+    "label": "바이쿨라",
+    "from_year": -209,
+    "to_year": -208,
+    "valid_from": -208,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -0.98,
+      37.6
+     ],
+     [
+      -3.78,
+      38.05
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "scipio@2",
+    "layer": "movements",
+    "route": "scipio",
+    "name_ko": "스키피오 아프리카누스 원정로",
+    "actor": "rome",
+    "label": "일리파",
+    "from_year": -208,
+    "to_year": -206,
+    "valid_from": -206,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -3.78,
+      38.05
+     ],
+     [
+      -5.98,
+      37.53
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "scipio@3",
+    "layer": "movements",
+    "route": "scipio",
+    "name_ko": "스키피오 아프리카누스 원정로",
+    "actor": "rome",
+    "label": "릴리바이움",
+    "from_year": -206,
+    "to_year": -204,
+    "valid_from": -204,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -5.98,
+      37.53
+     ],
+     [
+      12.43,
+      37.8
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "scipio@4",
+    "layer": "movements",
+    "route": "scipio",
+    "name_ko": "스키피오 아프리카누스 원정로",
+    "actor": "rome",
+    "label": "우티카 상륙",
+    "from_year": -204,
+    "to_year": -204,
+    "valid_from": -204,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      12.43,
+      37.8
+     ],
+     [
+      10.06,
+      37.06
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "id": "scipio@5",
+    "layer": "movements",
+    "route": "scipio",
+    "name_ko": "스키피오 아프리카누스 원정로",
+    "actor": "rome",
+    "label": "자마",
+    "from_year": -204,
+    "to_year": -202,
+    "valid_from": -202,
+    "valid_to": 1000000,
+    "source": "book",
+    "confidence": "medium"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      10.06,
+      37.06
+     ],
+     [
+      9,
+      36.3
+     ]
+    ]
+   }
   }
  ]
 }

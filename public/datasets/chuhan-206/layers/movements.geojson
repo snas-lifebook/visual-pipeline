@@ -1,0 +1,95 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "liubang@0",
+        "layer": "movements",
+        "route": "liubang",
+        "name_ko": "유방 진군로",
+        "actor": "han",
+        "label": "한중 → 관중 (환도)",
+        "from_year": -206,
+        "to_year": -206,
+        "valid_from": -206,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": { "type": "LineString", "coordinates": [[107.0, 33.1], [108.9, 34.3]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "liubang@1",
+        "layer": "movements",
+        "route": "liubang",
+        "name_ko": "유방 진군로",
+        "actor": "han",
+        "label": "관중 → 중원 (동진)",
+        "from_year": -206,
+        "to_year": -205,
+        "valid_from": -205,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": { "type": "LineString", "coordinates": [[108.9, 34.3], [113.3, 34.8]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "liubang@2",
+        "layer": "movements",
+        "route": "liubang",
+        "name_ko": "유방 진군로",
+        "actor": "han",
+        "label": "중원 → 해하 (결전)",
+        "from_year": -204,
+        "to_year": -202,
+        "valid_from": -202,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": { "type": "LineString", "coordinates": [[113.3, 34.8], [116.5, 33.4]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "xiangyu@0",
+        "layer": "movements",
+        "route": "xiangyu",
+        "name_ko": "항우 진군로",
+        "actor": "chu",
+        "label": "팽성 → 성고",
+        "from_year": -205,
+        "to_year": -204,
+        "valid_from": -204,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": { "type": "LineString", "coordinates": [[117.2, 34.3], [113.0, 34.7]] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "xiangyu@1",
+        "layer": "movements",
+        "route": "xiangyu",
+        "name_ko": "항우 진군로",
+        "actor": "chu",
+        "label": "성고 → 해하",
+        "from_year": -204,
+        "to_year": -202,
+        "valid_from": -202,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": { "type": "LineString", "coordinates": [[113.0, 34.7], [116.5, 33.4]] }
+    }
+  ]
+}

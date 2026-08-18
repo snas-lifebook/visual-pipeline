@@ -11,8 +11,8 @@
 | 지배 | 연도별 세력 판도 | `territory`(지역×통치구간, dated) + `actors` · `setFilter` | **완료** |
 | 도시·자원 | 정착지, 클릭 시 자원·정보 | `settlements`(dated Point, `resource`/`terrain`) · 클릭 상세 패널(`panel.ts`) | **완료** |
 | 전투 | 전투 아이콘 + 장군·승자·병력 | `battles`(dated Point) · 승자색 마커 · 클릭 팝업 | **완료(포에니 시드)** |
-| 이동 | 인물·군단 이동 경로 | `movements`(dated LineString) · setFilter로 구간 누적 | **완료(한니발 원정로)** |
-| Three.js 토큰 | 장군을 장기 말처럼 이동 연출 | `src/token3d.ts` CustomLayerInterface+three, 연도별 위치 500ms 이징 + pitch 30 | **완료(단일 토큰)** |
+| 이동 | 인물·군단 이동 경로 | `movements`(dated LineString) · setFilter로 구간 누적 | **완료(한니발·스키피오 원정로)** |
+| Three.js 토큰 | 장군을 장기 말처럼 이동 연출 | `src/token3d.ts` CustomLayerInterface+three, route별 토큰 + 경로 폴리라인 따라 행군 + pitch 30 | **완료(다중 토큰·행군)** |
 | 3D 지형·시뮬 | 산지 파악, 한니발 알프스 횡단 | MapLibre DEM 지형 + 경로 시뮬 | 할일 |
 
 ## 다운로드 (AI·팀원)
@@ -31,12 +31,13 @@
 | Polybius·Livy (고대사료) | PD | 전투·장군·병력 수치 | O |
 
 ## 다음 증분 (우선순위)
-1. **토큰 행군 애니메이션** — 현재는 도착 도시로 이징. 다음은 원정로 세그먼트를 따라 행군 + 다중 토큰(스키피오 등 2번째 장군 — `positionAtYear`를 route별로 분리 필요).
-2. **내륙 국경 정밀 트레이싱** — 해안선은 클립 완료, 내륙 경계는 러프.
-3. **2번째 데이터셋** — 삼국지/초한지 등으로 도메인 무관성 증명(스키마 재사용).
-4. **3D 지형 + 알프스 시뮬** — MapLibre DEM + 경로 고도 프로파일.
+1. **3D 지형 + 알프스 시뮬** — MapLibre DEM + 경로 고도 프로파일. (main.ts 지형 소스 + style 필요 — 토큰 스트림과 main.ts 경합이라 별도 라운드)
+2. **내륙 국경 나머지** — 자연지물 앵커가 있는 주요 경계(에브로·피레네·알프스·아펜니노·포)는 정밀화 완료. 앵커 없는 러프 구간(에브로 상류·라티움/캄파니아)은 사료 확보 후.
+3. **3번째 데이터셋 / 삼국지** — 초한지로 도메인 무관성 증명됨. 다음 도메인은 스키마 재사용만.
 
-완료: 이동 경로(`movements`, 한니발 원정로 218→202) · Three.js 토큰(연도별 이징 + pitch 입체감) · 자원/지형 상세 패널(`panel.ts`, 팝업 대체) · 타임슬라이스 내보내기(`export.ts`, 현재 연도 GeoJSON 다운로드) · 콘텐츠 확장(주요 도시 9 + resource/terrain + 사건 4).
+완료: 이동 경로(`movements`, 한니발 원정로 218→202) · Three.js 토큰(연도별 이징 + pitch 입체감) · 자원/지형 상세 패널(`panel.ts`, 팝업 대체) · 타임슬라이스 내보내기(`export.ts`, 현재 연도 GeoJSON 다운로드) · 콘텐츠 확장(주요 도시 9 + resource/terrain + 사건 4) · **다중 토큰·경로 행군**(한니발+스키피오, movements의 route별 토큰 자동 생성 — `routeGeometry`/`positionByRoute`) · **내륙 국경 정밀화**(에브로·피레네·알프스·아펜니노·포 자연지물 앵커) · **2번째 데이터셋 초한지**(스키마 무수정 재사용 증명, validateDataset 통과) · **데이터셋 스위처**(`?dataset=chuhan-206`).
 
 ## 현재 데이터셋
 `rome-753-218` (폴더명은 초기 스코프 유지 · 실제 범위 기원전 753~201, 제2차 포에니 종전까지). 전투 시드: 트레비아·트라시메노·칸나이·메타우루스·일리파·자마.
+
+`chuhan-206` (초한전쟁 기원전 206~202). 스키마 도메인 무관성 증명용 2번째 데이터셋 — `src/schema.ts` 무수정 재사용, `validateDataset` 통과. 楚(항우)·漢(유방), 전투 팽성·해하, 이동 유방·항우. `?dataset=chuhan-206`으로 로드.

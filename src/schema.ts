@@ -56,6 +56,49 @@ export function positionAtYear(features: Feature[], year: number): [number, numb
   return line[line.length - 1] as [number, number];
 }
 
+export interface RouteGeometry { path: [number, number][]; stops: { year: number; distAlong: number }[]; }
+
+/** route 세그먼트를 연도순으로 이어붙인 전체 폴리라인 + 정거장(연도, 누적 호길이). 순수·테스트가능. */
+export function routeGeometry(features: Feature[], route: string): RouteGeometry {
+  const segs = features
+    .filter(f => f.properties.route === route)
+    .slice()
+    .sort((a, b) => (a.properties.valid_from ?? OPEN_PAST) - (b.properties.valid_from ?? OPEN_PAST));
+
+  const path: [number, number][] = [];
+  const stops: { year: number; distAlong: number }[] = [];
+  let dist = 0;
+  for (const f of segs) {
+    const line = f.geometry.coordinates as [number, number][];
+    if (path.length === 0) {
+      path.push(line[0]);
+      stops.push({ year: f.properties.from_year ?? f.properties.valid_from, distAlong: 0 });
+    }
+    for (let i = 1; i < line.length; i++) {
+      const prev = path[path.length - 1];
+      const cur = line[i];
+      dist += Math.hypot(cur[0] - prev[0], cur[1] - prev[1]);
+      path.push(cur);
+    }
+    stops.push({ year: f.properties.to_year ?? f.properties.valid_from, distAlong: dist });
+  }
+  return { path, stops };
+}
+
+/** movements 세그먼트 중 특정 route의 year 시점 토큰 위치 = valid_from<=year인 마지막 세그먼트의 끝점. 없으면 null. 순수 헬퍼. */
+export function positionByRoute(features: Feature[], route: string, year: number): [number, number] | null {
+  let best: Feature | null = null;
+  let bestFrom = -Infinity;
+  for (const f of features) {
+    if (f.properties.route !== route) continue;
+    const vf = f.properties.valid_from ?? OPEN_PAST;
+    if (vf <= year && vf >= bestFrom) { best = f; bestFrom = vf; }
+  }
+  if (!best) return null;
+  const line = best.geometry.coordinates as number[][];
+  return line[line.length - 1] as [number, number];
+}
+
 const SOURCES = new Set(['book', 'web', 'book+web']);
 const CONFS = new Set(['high', 'medium', 'low']);
 

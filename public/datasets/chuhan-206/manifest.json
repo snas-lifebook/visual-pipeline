@@ -1,0 +1,12 @@
+{
+  "id": "chuhan-206",
+  "title": "초한전쟁 (기원전 206~202)",
+  "crs": "EPSG:4326",
+  "center": [113, 34],
+  "zoom": 4,
+  "time": { "from": -206, "to": -202, "unit": "year" },
+  "layers": ["territory", "admin_regions", "settlements", "battles", "movements"],
+  "skins": [],
+  "source": "스키마 도메인 무관성 증명용 2번째 데이터셋",
+  "note": "provisional — 국경 폴리곤은 러프 근사(confidence:low/medium)"
+}

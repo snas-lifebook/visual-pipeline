@@ -18,6 +18,19 @@
         { "year": -203, "lng": 10.40, "lat": 35.80, "label": "아프리카 소환" },
         { "year": -202, "lng": 9.00, "lat": 36.30, "label": "자마" }
       ]
+    },
+    {
+      "id": "scipio", "name_ko": "스키피오 아프리카누스 원정로", "actor": "rome",
+      "source": "book", "confidence": "medium",
+      "waypoints": [
+        { "year": -218, "lng": 1.25, "lat": 41.12, "label": "타라코 상륙" },
+        { "year": -209, "lng": -0.98, "lat": 37.60, "label": "카르타고노바 함락" },
+        { "year": -208, "lng": -3.78, "lat": 38.05, "label": "바이쿨라" },
+        { "year": -206, "lng": -5.98, "lat": 37.53, "label": "일리파" },
+        { "year": -204, "lng": 12.43, "lat": 37.80, "label": "릴리바이움" },
+        { "year": -204, "lng": 10.06, "lat": 37.06, "label": "우티카 상륙" },
+        { "year": -202, "lng": 9.00, "lat": 36.30, "label": "자마" }
+      ]
     }
   ]
 }

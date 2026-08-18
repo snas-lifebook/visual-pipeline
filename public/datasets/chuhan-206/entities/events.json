@@ -1,0 +1,8 @@
+{
+  "events": [
+    { "year": -206, "label": "홍문연 — 항우가 유방을 살려주다", "source": "book", "confidence": "high" },
+    { "year": -205, "label": "팽성 전투 — 항우가 유방 연합군을 대파", "source": "book", "confidence": "high" },
+    { "year": -204, "label": "성고 대치 — 형양·성고 일대 장기 공방", "source": "book", "confidence": "medium" },
+    { "year": -202, "label": "해하 전투 — 항우 자결, 초한전쟁 종결", "source": "book", "confidence": "high" }
+  ]
+}

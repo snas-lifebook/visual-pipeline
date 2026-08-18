@@ -1,0 +1,51 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "xianyang",
+        "layer": "settlements",
+        "name_ko": "함양",
+        "name_ancient": "咸陽",
+        "rank": 1,
+        "minzoom": 0,
+        "source": "book",
+        "confidence": "high",
+        "valid_from": -206
+      },
+      "geometry": { "type": "Point", "coordinates": [108.9, 34.3] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "pengcheng",
+        "layer": "settlements",
+        "name_ko": "팽성",
+        "name_ancient": "彭城",
+        "name_modern": "徐州",
+        "rank": 1,
+        "minzoom": 0,
+        "source": "book",
+        "confidence": "high",
+        "valid_from": -206
+      },
+      "geometry": { "type": "Point", "coordinates": [117.2, 34.3] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "xingyang",
+        "layer": "settlements",
+        "name_ko": "형양",
+        "name_ancient": "滎陽",
+        "rank": 2,
+        "minzoom": 3,
+        "source": "book",
+        "confidence": "medium",
+        "valid_from": -206
+      },
+      "geometry": { "type": "Point", "coordinates": [113.3, 34.8] }
+    }
+  ]
+}

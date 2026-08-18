@@ -1,0 +1,45 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "pengcheng_battle",
+        "layer": "battles",
+        "name_ko": "팽성 전투",
+        "year": -205,
+        "valid_from": -205,
+        "valid_to": 1000000,
+        "belligerents": ["chu", "han"],
+        "general_a": "유방",
+        "general_b": "항우",
+        "victor": "chu",
+        "strength_a": 560000,
+        "strength_b": 30000,
+        "source": "book",
+        "confidence": "high"
+      },
+      "geometry": { "type": "Point", "coordinates": [117.2, 34.3] }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "gaixia",
+        "layer": "battles",
+        "name_ko": "해하 전투",
+        "year": -202,
+        "valid_from": -202,
+        "valid_to": 1000000,
+        "belligerents": ["chu", "han"],
+        "general_a": "한신",
+        "general_b": "항우",
+        "victor": "han",
+        "strength_a": 300000,
+        "strength_b": 100000,
+        "source": "book",
+        "confidence": "high"
+      },
+      "geometry": { "type": "Point", "coordinates": [116.5, 33.4] }
+    }
+  ]
+}

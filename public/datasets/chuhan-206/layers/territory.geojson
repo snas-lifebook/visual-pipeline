@@ -1,0 +1,77 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "guanzhong_hanzhong@-206",
+        "layer": "territory",
+        "region": "guanzhong_hanzhong",
+        "name_ko": "관중·한중",
+        "actor": "han",
+        "valid_from": -206,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[106, 32], [110, 32], [110, 35], [106, 35], [106, 32]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "xichu_pengcheng@-206",
+        "layer": "territory",
+        "region": "xichu_pengcheng",
+        "name_ko": "서초·팽성",
+        "actor": "chu",
+        "valid_from": -206,
+        "valid_to": -202,
+        "source": "book",
+        "confidence": "medium"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[116, 33], [119, 33], [119, 35], [116, 35], [116, 33]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zhongyuan@-206",
+        "layer": "territory",
+        "region": "zhongyuan",
+        "name_ko": "중원 (형양·성고)",
+        "actor": "chu",
+        "valid_from": -206,
+        "valid_to": -204,
+        "source": "book",
+        "confidence": "low"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[112, 34], [115, 34], [115, 36], [112, 36], [112, 34]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "zhongyuan@-204",
+        "layer": "territory",
+        "region": "zhongyuan",
+        "name_ko": "중원 (형양·성고)",
+        "actor": "han",
+        "valid_from": -204,
+        "valid_to": 1000000,
+        "source": "book",
+        "confidence": "low"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[112, 34], [115, 34], [115, 36], [112, 36], [112, 34]]]
+      }
+    }
+  ]
+}
